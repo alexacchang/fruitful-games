@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
 import { addDoc, collection } from 'firebase/firestore';
-
-import { db } from '../firebaseConfig';
-import Button from '../components/Button';
+import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
+import { db } from '../firebaseConfig.js';
+import { useRouter } from 'expo-router';
 
 export default function Index() {
   const [name, setName] = useState('');
   const router = useRouter();
 
-  async function enterName() {
+  async function onNextButtonPress() {
     const docRef = await addDoc(collection(db, 'users'), {
       name: name,
     });
@@ -22,13 +20,30 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Text>Please enter your name</Text>
+      <Text>Enter name:</Text>
       <TextInput
-        style={styles.input}
+        style={{
+          borderWidth: 2,
+          borderRadius: 10,
+          width: '50%',
+          height: 40,
+          margin: 10,
+          textAlign: 'center',
+        }}
         value={name}
-        onChangeText={(text) => setName(text)}
+        onChangeText={setName}
       />
-      <Button onPress={enterName} title="Start" />
+      <Pressable
+        onPress={onNextButtonPress}
+        style={{
+          backgroundColor: 'lightblue',
+          padding: 10,
+          width: '20%',
+          alignItems: 'center',
+        }}
+      >
+        <Text>Next</Text>
+      </Pressable>
     </View>
   );
 }
@@ -38,14 +53,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  input: {
-    height: 40,
-    margin: 15,
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    textAlign: 'center',
-    width: '50%',
   },
 });
